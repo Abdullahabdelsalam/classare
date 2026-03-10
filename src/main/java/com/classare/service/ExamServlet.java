@@ -22,7 +22,7 @@ public class ExamServlet extends HttpServlet {
     private ExamDAO examDAO = new ExamDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // كود استقبال الملف وحفظه على السيرفر
+
         Part filePart = request.getPart("examFile");
         String fileName = filePart.getSubmittedFileName();
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";

@@ -9,9 +9,6 @@ import java.util.List;
 
 public class InstructorDAO {
 
-    /* =====================================================
-       1️⃣ Get All Instructors
-       ===================================================== */
     public List<Instructor> getAllInstructors() {
         List<Instructor> instructors = new ArrayList<>();
 
@@ -56,9 +53,7 @@ public class InstructorDAO {
         return instructors;
     }
 
-    /* =====================================================
-       2️⃣ Get Instructor By ID
-       ===================================================== */
+
     public Instructor getInstructorById(long instructorId) {
 
         String sql = """
@@ -105,9 +100,6 @@ public class InstructorDAO {
         return null;
     }
 
-    /* =====================================================
-       3️⃣ Get Instructor ID By Person ID
-       ===================================================== */
     public long getInstructorIdByPersonId(long personId) {
 
         String sql = "SELECT id FROM instructors WHERE person_id = ?";
@@ -128,9 +120,7 @@ public class InstructorDAO {
         return -1;
     }
 
-    /* =====================================================
-       4️⃣ Get Courses By Instructor
-       ===================================================== */
+
     public List<Course> getCoursesByInstructor(long instructorId) {
         List<Course> courses = new ArrayList<>();
 
@@ -227,7 +217,7 @@ public class InstructorDAO {
                 person.setPhone(rs.getString("phone"));
                 person.setAddress(rs.getString("address"));
 
-                instructor.setPerson(person); // ✅ هنا تستخدم setter
+                instructor.setPerson(person);
                 return instructor;
             }
 

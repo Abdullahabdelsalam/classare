@@ -15,7 +15,6 @@ public class RegistrationDAO {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
 
-            // 1️⃣ person
             String personSql = """
           INSERT INTO person(national_id, first_name, last_name, gender, birth_date, phone, address)
                           VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -40,7 +39,6 @@ public class RegistrationDAO {
             if (!prs.next()) throw new SQLException("Failed to create person");
             long personId = prs.getLong(1);
 
-            // 2️⃣ users
             String userSql = """
             INSERT INTO users (person_id, email, password_hash)
             VALUES (?, ?, ?)
@@ -64,7 +62,6 @@ public class RegistrationDAO {
             rStmt.setLong(1, userId);
             rStmt.executeUpdate();
 
-            // 4️⃣ instructors
             String instructorSql = """
             INSERT INTO instructors (person_id, specialization)
             VALUES (?, ?)
@@ -90,9 +87,8 @@ public boolean registerStudent(Person person, String email, String password, int
     Connection conn = null;
     try {
         conn = DBConnection.getConnection();
-        conn.setAutoCommit(false); // بدء المعاملة لضمان حفظ كل الجداول أو لا شيء
+        conn.setAutoCommit(false);
 
-        // 1. حفظ البيانات الشخصية (جدول person)
         String personSql = "INSERT INTO person (national_id, first_name, last_name, gender, birth_date, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pStmt = conn.prepareStatement(personSql, Statement.RETURN_GENERATED_KEYS);
         pStmt.setString(1, person.getNationalId());
@@ -108,7 +104,6 @@ public boolean registerStudent(Person person, String email, String password, int
         long personId = 0;
         if (rsP.next()) personId = rsP.getLong(1);
 
-        // 2. إنشاء حساب المستخدم (جدول users)
         String userSql = "INSERT INTO users (person_id, email, password_hash) VALUES (?, ?, ?)";
         PreparedStatement uStmt = conn.prepareStatement(userSql, Statement.RETURN_GENERATED_KEYS);
         uStmt.setLong(1, personId);
@@ -120,21 +115,17 @@ public boolean registerStudent(Person person, String email, String password, int
         long userId = 0;
         if (rsU.next()) userId = rsU.getLong(1);
 
-        // 3. ربط المستخدم بدور STUDENT (جدول user_roles)
         String roleSql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, (SELECT id FROM roles WHERE name = 'STUDENT'))";
         PreparedStatement rStmt = conn.prepareStatement(roleSql);
         rStmt.setLong(1, userId);
         rStmt.executeUpdate();
 
-        // 4. ربط الطالب بالمستوى الدراسي (جدول students)
-        // تعديل جملة الـ INSERT لتشمل الكلية
         String studentSql = "INSERT INTO students (person_id, level_id, faculty_id) VALUES (?, ?, ?)";
         PreparedStatement sStmt = conn.prepareStatement(studentSql);
 
         sStmt.setLong(1, personId);
         sStmt.setInt(2, levelId);
 
-// الربط الذكي: لو مفيش كلية (حالة المدارس) نبعت NULL
         if (facultyId != 0) {
             sStmt.setInt(3, facultyId);
         } else {
@@ -142,7 +133,7 @@ public boolean registerStudent(Person person, String email, String password, int
         }
         sStmt.executeUpdate();
 
-        conn.commit(); // تنفيذ كل العمليات بنجاح
+        conn.commit();
         return true;
 
     } catch (SQLException e) {

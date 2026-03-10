@@ -21,7 +21,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // فتح صفحة التسجيل
         request.getRequestDispatcher("instructor-reg.jsp")
                 .forward(request, response);
     }
@@ -31,9 +30,7 @@ public class InstructorRegistrationServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // ===============================
-            // 1️⃣ قراءة البيانات من الفورم
-            // ===============================
+
             String firstName     = request.getParameter("firstName");
             String lastName      = request.getParameter("lastName");
             String nationalId    = request.getParameter("nationalId");
@@ -46,9 +43,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
             String password      = request.getParameter("password");
             String birthDateStr  = request.getParameter("birthDate");
 
-            // ===============================
-            // 2️⃣ تجهيز Person
-            // ===============================
             Person person = new Person();
             person.setFirstName(firstName);
             person.setLastName(lastName);
@@ -57,27 +51,19 @@ public class InstructorRegistrationServlet extends HttpServlet {
             person.setPhone(phone);
             person.setAddress(address);
 
-            // تحويل تاريخ الميلاد (HTML → LocalDate)
             if (birthDateStr != null && !birthDateStr.isBlank()) {
                 person.setBirthDate(LocalDate.parse(birthDateStr));
             }
 
-            // ===============================
-            // 3️⃣ تجهيز Instructor
-            // ===============================
             Instructor instructor = new Instructor();
             instructor.setPerson(person);
             instructor.setSpecialization(specialization);
 
-            // ===============================
-            // 4️⃣ الحفظ في الداتابيز
-            // ===============================
+
             boolean success =
                     registrationDAO.registerInstructor(instructor, email, password);
 
-            // ===============================
-            // 5️⃣ Navigation
-            // ===============================
+
             if (success) {
                 response.sendRedirect("registration-success.jsp");
             } else {

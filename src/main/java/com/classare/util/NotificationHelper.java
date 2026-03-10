@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class NotificationHelper {
-    /**
-     * ميثود عامة لإرسال إشعار لأي مستخدم في النظام
-     */
+
     public void sendNotification(long userId, String title, String message) {
         String sql = "INSERT INTO notifications (user_id, title, message, is_read, created_at) " +
                 "VALUES (?, ?, ?, FALSE, NOW())";

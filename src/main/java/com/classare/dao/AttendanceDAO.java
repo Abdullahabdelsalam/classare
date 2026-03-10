@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendanceDAO {
-    // جلب الطلاب المسجلين في نفس مستوى الكورس (Level)
 //    public List<Student> getStudentsByCourseLevel(long courseId) {
 //        List<Student> students = new ArrayList<>();
 //        String sql = "SELECT s.id as student_id, p.first_name, p.last_name " +
@@ -38,7 +37,6 @@ public class AttendanceDAO {
 //        return students;
 //    }
 
-    // حفظ أو تحديث الحضور (Upsert logic)
     public boolean markAttendance(long sessionId, long studentId, String status) {
         String sql = "INSERT INTO attendance (session_id, student_id, status) VALUES (?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE status = ?";

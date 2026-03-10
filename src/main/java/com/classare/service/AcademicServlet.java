@@ -16,18 +16,15 @@ public class AcademicServlet extends HttpServlet {
 
     private AcademicDAO academicDAO = new AcademicDAO();
 
-    // لعرض البيانات (المراحل والصفوف والمواد)
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         List<Stage> stages = academicDAO.getAllStages();
         request.setAttribute("stages", stages);
 
-        // هنا يمكنك جلب المستويات والمواد أيضاً إذا أردت عرضهم في جداول
         request.getRequestDispatcher("academic-mgmt.jsp").forward(request, response);
     }
 
-    // لمعالجة عمليات الإضافة
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

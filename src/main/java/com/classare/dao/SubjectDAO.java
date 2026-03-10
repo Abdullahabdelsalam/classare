@@ -11,7 +11,6 @@ import java.util.List;
 
 public class SubjectDAO {
 
-    // جلب كل المواد مع المستوى والمرحلة
     public static List<Subject> getAllSubjects() {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT s.id AS subject_id, s.name AS subject_name, " +
@@ -38,7 +37,6 @@ public class SubjectDAO {
         return list;
     }
 
-    // إنشاء مادة جديدة مرتبطة بمستوى
     public static boolean createSubject(String name, int levelId) {
         String sql = "INSERT INTO subjects (name, level_id) VALUES (?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -52,7 +50,6 @@ public class SubjectDAO {
         }
     }
 
-    // تحديث مادة موجودة
     public static boolean updateSubject(int id, String name, int levelId) {
         String sql = "UPDATE subjects SET name = ?, level_id = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -67,7 +64,6 @@ public class SubjectDAO {
         }
     }
 
-    // حذف مادة
     public static boolean deleteSubject(int id) {
         String sql = "DELETE FROM subjects WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -80,7 +76,6 @@ public class SubjectDAO {
         }
     }
 
-    // جلب مادة واحدة حسب id
     public static Subject getSubjectById(int id) {
         String sql = "SELECT s.id AS subject_id, s.name AS subject_name, " +
                 "l.id AS level_id, l.name AS level_name, " +

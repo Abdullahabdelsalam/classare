@@ -26,20 +26,15 @@ public class StudentRegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. جلب كل المراحل (Primary, Middle, High... etc)
         List<Stage> stages = academicDAO.getAllStages();
 
-        // 2. جلب كل المستويات (Grade 1, Grade 2... etc)
         List<Level> levels = academicDAO.getAllLevels();
-//        List<Faculty> faculties = academicDAO.getAllFaculties();
 
-        // 3. تمرير البيانات للـ JSP
         request.setAttribute("stages", stages);
         request.setAttribute("levels", levels);
         request.setAttribute("faculties", academicDAO.getAllFaculties());
 
 
-        // 4. التوجه لصفحة التسجيل
         request.getRequestDispatcher("student-reg.jsp").forward(request, response);
 
     }
@@ -49,7 +44,6 @@ public class StudentRegistrationServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // 1. استخراج بيانات الشخص من الفورم
             Person p = new Person();
             p.setFirstName(request.getParameter("firstName"));
             p.setLastName(request.getParameter("lastName"));
@@ -58,13 +52,9 @@ public class StudentRegistrationServlet extends HttpServlet {
             p.setGender(request.getParameter("gender"));
             p.setPhone(request.getParameter("phone"));
             p.setAddress(request.getParameter("address"));
-
-            // 2. استخراج بيانات الحساب والمستوى الدراسي
             String email = request.getParameter("email");
             String pass = request.getParameter("password");
             String levelIdRaw = request.getParameter("levelId");
-
-            // التحقق من وجود البيانات الأساسية
             if (levelIdRaw == null || email == null || pass == null) {
                 response.sendRedirect("register-student?error=missing_fields");
                 return;
@@ -77,12 +67,9 @@ public class StudentRegistrationServlet extends HttpServlet {
                 facultyId = Integer.parseInt(facultyIdRaw);
             }
 
-            // 3. تنفيذ عملية التسجيل عبر الـ DAO
-            // الـ DAO يقوم داخلياً بإنشاء (Person -> User -> Student) في Transaction واحدة
             boolean success = regDAO.registerStudent(p, email, pass, levelId, facultyId);
 
             if (success) {
-                // التوجه لصفحة النجاح بدلاً من صفحة اللوجن مباشرة
                 response.sendRedirect("registration-success.jsp");
             } else {
                 response.sendRedirect("register-student?error=db_error");

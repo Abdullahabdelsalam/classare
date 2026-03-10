@@ -19,7 +19,6 @@ public class SessionServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long courseId = Long.parseLong(request.getParameter("courseId"));
-        // جلب الحصص القديمة لعرضها
         List<Session> sessions = sessionDAO.getSessionsByCourse(courseId);
         request.setAttribute("sessions", sessions);
         request.setAttribute("courseId", courseId);
@@ -29,7 +28,7 @@ public class SessionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session s = new Session();
         s.setCourseId(Long.parseLong(request.getParameter("courseId")));
-        s.setCenterId(Long.parseLong(request.getParameter("centerId"))); // هتاخده من بيانات الكورس
+        s.setCenterId(Long.parseLong(request.getParameter("centerId")));
         s.setSessionDate(LocalDate.parse(request.getParameter("date")));
         s.setStartTime(LocalTime.parse(request.getParameter("startTime")));
         s.setEndTime(LocalTime.parse(request.getParameter("endTime")));

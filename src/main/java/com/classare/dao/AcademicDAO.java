@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AcademicDAO {
-    // جلب كل المراحل (Stages)
+
     public List<Stage> getAllStages() {
         List<Stage> stages = new ArrayList<>();
         String sql = "SELECT * FROM stages";
@@ -25,7 +25,7 @@ public class AcademicDAO {
         return stages;
     }
 
-    // إضافة مستوى جديد مرتبط بمرحلة
+
     public boolean addLevel(int stageId, String levelName) {
         String sql = "INSERT INTO levels (stage_id, name) VALUES (?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -56,7 +56,6 @@ public class AcademicDAO {
         }
         return subjects;
     }
-    // أضف هذه الدوال داخل كلاس AcademicDAO
     public boolean addStage(String name) {
         String sql = "INSERT INTO stages (name) VALUES (?)";
         try (Connection conn = DBConnection.getConnection();
@@ -93,7 +92,7 @@ public class AcademicDAO {
     }
     public List<Level> getAllLevels() {
         List<Level> levels = new ArrayList<>();
-        // سنستخدم Join لجلب اسم المرحلة مع المستوى لعرضها بشكل احترافي
+
         String sql = "SELECT l.id, l.name as level_name, s.id as stage_id, s.name as stage_name " +
                 "FROM levels l " +
                 "JOIN stages s ON l.stage_id = s.id " +
@@ -108,7 +107,6 @@ public class AcademicDAO {
                 level.setId(rs.getInt("id"));
                 level.setName(rs.getString("level_name"));
 
-                // تعبئة كائن المرحلة ووضعه داخل كائن المستوى
                 Stage stage = new Stage();
                 stage.setId(rs.getInt("stage_id"));
                 stage.setName(rs.getString("stage_name"));

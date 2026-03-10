@@ -9,18 +9,17 @@ public class DBConnection {
 
         static {
                 HikariConfig config = new HikariConfig();
-                // أضف &allowPublicKeyRetrieval=true في نهاية الرابط
                 config.setJdbcUrl("jdbc:mysql://localhost:3306/classare?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
 //                config.setJdbcUrl("jdbc:mysql://localhost:3306/educore?useSSL=false&serverTimezone=UTC");
-                config.setUsername("root"); // غيره حسب إعداداتك
-                config.setPassword("1111"); // غيره حسب إعداداتك
+                config.setUsername("root");
+                config.setPassword("1111");
                 config.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                 } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                 }
-                // إعدادات الـ Pool للـ Production
+
                 config.setMaximumPoolSize(10);
                 config.setMinimumIdle(5);
                 config.setIdleTimeout(300000);

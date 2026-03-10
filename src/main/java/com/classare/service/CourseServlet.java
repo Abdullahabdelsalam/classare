@@ -19,18 +19,15 @@ public class CourseServlet extends HttpServlet {
     private AcademicDAO academicDAO = new AcademicDAO();
     private CenterDAO centerDAO = new CenterDAO();
     InstructorDAO instructorDAO = new InstructorDAO();
-    // سنحتاج أيضاً InstructorDAO لجلب قائمة المدرسين
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // تجهيز القوائم المنسدلة (Dropdowns)
-        request.setAttribute("subjects", academicDAO.getAllSubjects()); // getAllSubjects في AcademicDAO
-        request.setAttribute("levels", academicDAO.getAllLevels());     // getAllLevels في AcademicDAO
-        request.setAttribute("centers", centerDAO.getAllCenters());     // getAllCenters في CenterDAO
-        request.setAttribute("instructors", instructorDAO.getAllInstructors()); // بدل teachers
+        request.setAttribute("subjects", academicDAO.getAllSubjects());
+        request.setAttribute("levels", academicDAO.getAllLevels());
+        request.setAttribute("centers", centerDAO.getAllCenters());
+        request.setAttribute("instructors", instructorDAO.getAllInstructors());
 
-        // توجيه الصفحة
         request.getRequestDispatcher("add-course.jsp").forward(request, response);
     }
 

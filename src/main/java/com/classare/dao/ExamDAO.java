@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExamDAO {
-    // المدرس يرفع امتحان
+
     public boolean uploadExam(Exam exam) {
         String sql = "INSERT INTO exams (course_id, title, file_url, uploaded_by, center_id) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -26,7 +26,6 @@ public class ExamDAO {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    // الطالب يجيب الامتحانات المتاحة لكورساته
     public List<Exam> getExamsForStudent(long studentId) {
         List<Exam> exams = new ArrayList<>();
         String sql = "SELECT e.* FROM exams e " +
@@ -74,7 +73,6 @@ public class ExamDAO {
                 sub.setGrade(rs.getDouble("grade"));
                 sub.setCorrected(rs.getBoolean("corrected"));
 
-                // تخزين الاسم داخل الكائن نفسه
                 sub.setStudentName(rs.getString("first_name") + " " + rs.getString("last_name"));
 
                 list.add(sub);
