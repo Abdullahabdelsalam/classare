@@ -36,3 +36,13 @@ build/
 
 ### Mac OS ###
 .DS_Store
+.idea/
+/.idea/
+.idea
+.smarttomcat
+/.smarttomcat
+.smarttomcat/
+/target/
+target
+/target
+target/
