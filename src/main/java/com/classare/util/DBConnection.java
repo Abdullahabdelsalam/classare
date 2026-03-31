@@ -9,10 +9,13 @@ public class DBConnection {
 
         static {
                 HikariConfig config = new HikariConfig();
-                config.setJdbcUrl("jdbc:mysql://localhost:3306/classare?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
-//                config.setJdbcUrl("jdbc:mysql://localhost:3306/educore?useSSL=false&serverTimezone=UTC");
-                config.setUsername("root");
-                config.setPassword("1111");
+                String dbUrl = System.getenv("DB_URL") != null ? System.getenv("DB_URL") : "jdbc:mysql://localhost:3306/classare?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+                String dbUser = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "root";
+                String dbPassword = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "1111";
+
+                config.setJdbcUrl(dbUrl);
+                config.setUsername(dbUser);
+                config.setPassword(dbPassword);
                 config.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 try {
                         Class.forName("com.mysql.cj.jdbc.Driver");

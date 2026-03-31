@@ -47,3 +47,20 @@ target
 /target
 target/
 .gitignore
+
+# Exclude unnecessary files from Docker build context
+target/
+.idea/
+.git/
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+*.log
+*.tmp
+.vscode/
+.smarttomcat/
+# Exclude test files if not needed in production
+# src/test/
+
+
