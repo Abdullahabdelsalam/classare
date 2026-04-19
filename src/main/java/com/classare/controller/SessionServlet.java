@@ -1,4 +1,4 @@
-package com.classare.service;
+package com.classare.controller;
 
 import com.classare.dao.SessionDAO;
 import com.classare.model.Session;

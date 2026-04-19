@@ -1,7 +1,7 @@
-package com.classare.service;
+package com.classare.controller;
 
-import com.classare.dao.LevelDAO;
-import com.classare.model.Level;
+import com.classare.dao.FacultyDAO;
+import com.classare.model.Faculty;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,15 +11,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/levels")
-public class LevelsServlet extends HttpServlet {
+@WebServlet("/admin/faculties")
+public class FacultiesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Level> levels = LevelDAO.getAllLevels();
-        request.setAttribute("levels", levels);
-        request.getRequestDispatcher("/admin/levels.jsp")
+        List<Faculty> faculties = FacultyDAO.getAllFaculties();
+        request.setAttribute("faculties", faculties);
+        request.getRequestDispatcher("/admin/faculties.jsp")
                 .forward(request, response);
     }
 
@@ -29,26 +29,26 @@ public class LevelsServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if (action == null) {
-            response.sendRedirect("levels");
+            response.sendRedirect("faculties");
             return;
         }
 
         switch (action) {
             case "create":
                 String name = request.getParameter("name");
-                LevelDAO.createLevel(name);
+                FacultyDAO.createFaculty(name);
                 break;
             case "update":
                 int id = Integer.parseInt(request.getParameter("id"));
                 String newName = request.getParameter("name");
-                LevelDAO.updateLevel(id, newName);
+                FacultyDAO.updateFaculty(id, newName);
                 break;
             case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
-                LevelDAO.deleteLevel(delId);
+                FacultyDAO.deleteFaculty(delId);
                 break;
         }
 
-        response.sendRedirect("levels");
+        response.sendRedirect("faculties");
     }
 }

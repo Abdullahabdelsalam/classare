@@ -130,25 +130,78 @@ public class StudentDAO {
         return null;
     }
 
-    public List<Session> getUpcomingSessions(int levelId) {
-        List<Session> sessions = new ArrayList<>();
-        String sql = "SELECT sess.*, sub.name as subject_name, p.first_name, p.last_name " +
-                "FROM sessions sess " +
-                "JOIN courses c ON sess.course_id = c.id " +
-                "JOIN subjects sub ON c.subject_id = sub.id " +
-                "JOIN teachers t ON c.teacher_id = t.id " +
-                "JOIN person p ON t.person_id = p.id " +
-                "WHERE c.level_id = ? AND sess.session_date >= CURDATE() " +
-                "ORDER BY sess.session_date, sess.start_time";
+    public int countUpcomingLectures(long studentId) {
+        String sql = """
+        SELECT COUNT(*) 
+        FROM lectures l
+        JOIN courses c ON l.course_id = c.id
+        JOIN students s ON s.level_id = c.level_id
+        WHERE s.id = ?
+        AND l.lecture_date = CURDATE()
+    """;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, levelId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            ps.setLong(1, studentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return sessions;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public int countMyCourses(long studentId) {
+        String sql = """
+        SELECT COUNT(DISTINCT c.id)
+        FROM courses c
+        JOIN students s ON s.level_id = c.level_id
+        WHERE s.id = ?
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, studentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int countPendingExams(long studentId) {
+        String sql = """
+        SELECT COUNT(e.id)
+        FROM exams e
+        JOIN courses c ON e.course_id = c.id
+        JOIN students s ON s.level_id = c.level_id
+        LEFT JOIN exam_submissions es 
+            ON es.exam_id = e.id AND es.student_id = s.id
+        WHERE s.id = ?
+        AND es.id IS NULL
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, studentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

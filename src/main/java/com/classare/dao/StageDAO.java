@@ -1,7 +1,6 @@
 package com.classare.dao;
 
 import com.classare.model.Stage;
-import com.classare.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

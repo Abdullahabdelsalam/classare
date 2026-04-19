@@ -1,8 +1,7 @@
-package com.classare.service;
+package com.classare.controller;
 
 import com.classare.dao.AcademicDAO;
 import com.classare.dao.RegistrationDAO;
-import com.classare.model.Faculty;
 import com.classare.model.Level;
 import com.classare.model.Person;
 import com.classare.model.Stage;

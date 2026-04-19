@@ -1,16 +1,29 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.classare.model.User" %>
 <%@ page import="com.classare.model.Person" %>
+<%@ page import="com.classare.dao.StudentDAO" %>
+<%@ page import="com.classare.model.Student" %>
 <%
-
            User user = (User) session.getAttribute("user");
             if (user == null || !user.hasRole("STUDENT")) {
                 response.sendRedirect("../login.jsp");
                 return;
             }
             Person person = user.getPerson();
-%>
 
+            Student student = StudentDAO.findByPersonId(person.getId());
+            StudentDAO dao = new StudentDAO();
+
+            int upcomingLectures = 0;
+            int myCourses = 0;
+            int pendingExams = 0;
+
+            if (student != null) {
+                upcomingLectures = dao.countUpcomingLectures(student.getId());
+                myCourses = dao.countMyCourses(student.getId());
+                pendingExams = dao.countPendingExams(student.getId());
+                }
+%>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -95,12 +108,38 @@
     <header class="header-section d-flex justify-content-between align-items-center">
         <div>
             <h1 class="greeting">Happy Learning, <%= person.getFirstName() %>! 🎓</h1>
-            <p class="text-muted">You have 2 upcoming lectures today. Don't miss out!</p>
+            <p class="text-muted">
+                You have <%= (student != null) ? upcomingLectures : 0 %> upcoming lectures today. Don't miss out!
+            </p>
         </div>
         <a href="../logout" class="logout-pill text-decoration-none">
             <i class="fa-solid fa-power-off me-2"></i> Logout
         </a>
     </header>
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border text-center">
+                    <h3 class="fw-bold text-success"><%= (student != null) ? upcomingLectures : 0 %></h3>
+                    <p class="mb-0 text-muted">Today's Lectures</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border text-center">
+                    <h3 class="fw-bold text-primary"><%= (student != null) ? myCourses : 0  %></h3>
+                    <p class="mb-0 text-muted">My Courses</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border text-center">
+                    <h3 class="fw-bold text-warning"><%= (student != null) ? pendingExams : 0 %></h3>
+                    <p class="mb-0 text-muted">Pending Exams</p>
+                </div>
+            </div>
+
+        </div>
 
     <div class="row g-4">
 

@@ -1,11 +1,10 @@
-package com.classare.service;
+package com.classare.controller;
 
 import com.classare.dao.InstructorDAO;
 import com.classare.dao.StudentDAO;
 import com.classare.dao.UserDAO;
 import com.classare.model.User;
 import com.classare.util.PasswordUtil;
-import com.classare.dao.InstructorDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

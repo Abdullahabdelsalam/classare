@@ -1,4 +1,4 @@
-package com.classare.service;
+package com.classare.controller;
 
 import com.classare.dao.ExamDAO;
 import com.classare.model.ExamSubmission;

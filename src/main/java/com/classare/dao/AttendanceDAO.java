@@ -1,15 +1,10 @@
 package com.classare.dao;
 
-import com.classare.model.Person;
-import com.classare.model.Student;
 import com.classare.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AttendanceDAO {
 //    public List<Student> getStudentsByCourseLevel(long courseId) {

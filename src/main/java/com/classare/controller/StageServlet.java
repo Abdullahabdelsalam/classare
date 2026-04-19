@@ -1,4 +1,4 @@
-package com.classare.service;
+package com.classare.controller;
 import com.classare.dao.StageDAO;
 import com.classare.model.Stage;
 import com.classare.util.DBConnection;

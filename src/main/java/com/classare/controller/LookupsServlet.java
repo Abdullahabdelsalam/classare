@@ -1,4 +1,4 @@
-package com.classare.service;
+package com.classare.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
