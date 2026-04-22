@@ -5,6 +5,7 @@
 <%@ page import="com.classare.model.Student" %>
 
 <%
+    // التحقق من الجلسة وصلاحيات الطالب
     User user = (User) session.getAttribute("user");
     if (user == null || !user.hasRole("STUDENT")) {
         response.sendRedirect("../login.jsp");

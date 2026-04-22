@@ -1,6 +1,7 @@
 package com.classare.dao;
 
 
+import com.classare.model.Course;
 import com.classare.util.DBConnection;
 
 import java.sql.*;
@@ -139,5 +140,38 @@ public class StudentCourseDAO {
         }
 
         return 0;
+    }
+
+    public List<Course> getMyCourses(long studentId) {
+
+        List<Course> courses = new ArrayList<>();
+
+        String sql = "SELECT c.* FROM courses c " +
+                "JOIN student_courses sc ON c.id = sc.course_id " +
+                "WHERE sc.student_id=? AND sc.status='ACTIVE'";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, studentId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Course c = new Course();
+
+                c.setId(rs.getLong("id"));
+                c.setName(rs.getString("name"));
+                c.setPrice(rs.getDouble("price"));
+                c.setType(rs.getString("type"));
+
+                courses.add(c);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return courses;
     }
 }

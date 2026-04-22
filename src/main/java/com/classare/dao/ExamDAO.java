@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExamDAO {
 
@@ -21,7 +23,7 @@ public class ExamDAO {
             stmt.setString(2, exam.getTitle());
             stmt.setString(3, exam.getFileUrl());
             stmt.setLong(4, exam.getTeacherId());
-            stmt.setLong(5, 1); // سنقوم بجلب الـ center_id من الكورس
+            stmt.setLong(5, 1);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
@@ -80,4 +82,79 @@ public class ExamDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
+
+        // 1) Get exams for student
+        public List<Map<String, Object>> getStudentExams(long studentId) {
+
+            List<Map<String, Object>> exams = new ArrayList<>();
+
+            String sql = "SELECT e.id, e.title, c.name AS course_name " +
+                    "FROM exams e " +
+                    "JOIN courses c ON e.course_id = c.id " +
+                    "JOIN student_courses sc ON sc.course_id = c.id " +
+                    "WHERE sc.student_id=?";
+
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setLong(1, studentId);
+
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("id", rs.getLong("id"));
+                    row.put("title", rs.getString("title"));
+                    row.put("course_name", rs.getString("course_name"));
+                    exams.add(row);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return exams;
+        }
+
+        // 2) Check if submitted
+        public boolean isSubmitted(long examId, long studentId) {
+
+            String sql = "SELECT 1 FROM exam_submissions WHERE exam_id=? AND student_id=?";
+
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setLong(1, examId);
+                ps.setLong(2, studentId);
+
+                ResultSet rs = ps.executeQuery();
+                return rs.next();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        // 3) Submit exam
+        public boolean submitExam(long examId, long studentId, String filePath) {
+
+            String sql = "INSERT INTO exam_submissions (exam_id, student_id, answer_file) VALUES (?, ?, ?)";
+
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setLong(1, examId);
+                ps.setLong(2, studentId);
+                ps.setString(3, filePath);
+
+                return ps.executeUpdate() > 0;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
 }

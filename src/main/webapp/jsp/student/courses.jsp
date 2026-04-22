@@ -5,10 +5,10 @@
 
 <%
     User user = (User) session.getAttribute("user");
-    if(user == null) {
-        response.sendRedirect("../../login.jsp");
-        return;
-    }
+            if (user == null || !user.hasRole("STUDENT")) {
+                response.sendRedirect("../login.jsp");
+                return;
+            }
 
     Connection conn = DBConnection.getConnection();
     Statement st = conn.createStatement();

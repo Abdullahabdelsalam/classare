@@ -1,4 +1,4 @@
-package com.classare.controller.service;
+package com.classare.controller;
 
 import com.classare.dao.AcademicDAO;
 import com.classare.dao.CenterDAO;
