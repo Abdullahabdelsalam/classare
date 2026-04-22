@@ -2,9 +2,8 @@
 <%@ page import="com.classare.model.User" %>
 <%@ page import="com.classare.model.Person" %>
 <%
-    // التحقق من الجلسة والصلاحيات
     User user = (User) session.getAttribute("user");
-    if (user == null || !user.hasRole("INSTRUCTOR")) { // تأكدي من ميثود hasRole أو استبدالها بـ user.getRoles().contains(...)
+    if (user == null || !user.hasRole("INSTRUCTOR")) {
         response.sendRedirect("../login.jsp");
         return;
     }
@@ -99,7 +98,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="manage_lectures.jsp" class="action-card">
+            <a href="<%= request.getContextPath() %>/instructor/lectures" class="action-card">
                 <div class="icon-box bg-purple"><i class="fa-solid fa-chalkboard"></i></div>
                 <h5 class="action-title">Lectures</h5>
                 <p class="action-desc">Organize and schedule your live sessions.</p>
@@ -107,7 +106,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="upload_exam.jsp" class="action-card">
+            <a href="<%= request.getContextPath() %>/instructor/upload-exam" class="action-card">
                 <div class="icon-box bg-orange"><i class="fa-solid fa-file-circle-plus"></i></div>
                 <h5 class="action-title">Exams</h5>
                 <p class="action-desc">Create quizzes and assessment forms.</p>
@@ -115,7 +114,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="view_payments.jsp" class="action-card">
+            <a href="<%= request.getContextPath() %>/instructor/payments" class="action-card">
                 <div class="icon-box bg-green"><i class="fa-solid fa-wallet"></i></div>
                 <h5 class="action-title">Payments</h5>
                 <p class="action-desc">Track earnings and student subscriptions.</p>

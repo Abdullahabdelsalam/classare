@@ -7,58 +7,68 @@ import java.util.*;
 
 public class PaymentDAO {
 
-    // get student payments
-    public List<Map<String, Object>> getStudentPayments(long studentId) {
+public boolean pay(long studentId, long courseId, double amount) {
 
-        List<Map<String, Object>> list = new ArrayList<>();
+    String sql = "INSERT INTO payments (student_id, course_id, amount, status) " +
+            "VALUES (?, ?, ?, 'PAID')";
 
-        String sql = "SELECT p.id, c.name as course_name, p.amount, p.status, p.payment_date " +
-                "FROM payments p " +
-                "JOIN courses c ON p.course_id = c.id " +
-                "WHERE p.student_id=?";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setLong(1, studentId);
+        ps.setLong(2, courseId);
+        ps.setDouble(3, amount);
 
-            ps.setLong(1, studentId);
+        return ps.executeUpdate() > 0;
 
-            ResultSet rs = ps.executeQuery();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 
-            while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("id", rs.getLong("id"));
-                row.put("course", rs.getString("course_name"));
-                row.put("amount", rs.getDouble("amount"));
-                row.put("status", rs.getString("status"));
-                row.put("date", rs.getTimestamp("payment_date"));
+    return false;
+}
+public List<Map<String, Object>> getInstructorPayments(long instructorId) {
 
-                list.add(row);
-            }
+    List<Map<String, Object>> list = new ArrayList<>();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+    String sql =
+            "SELECT p.id, p.amount, p.status, p.payment_date, " +
+                    "c.id as course_id, s.name as subject, " +
+                    "per.first_name, per.last_name " +
+                    "FROM payments p " +
+                    "JOIN courses c ON p.course_id = c.id " +
+                    "LEFT JOIN subjects s ON c.subject_id = s.id " +
+                    "JOIN students st ON p.student_id = st.id " +
+                    "JOIN person per ON st.person_id = per.id " +
+                    "WHERE c.instructor_id=? " +
+                    "ORDER BY p.payment_date DESC";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setLong(1, instructorId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Map<String, Object> row = new HashMap<>();
+
+            row.put("id", rs.getLong("id"));
+            row.put("course", rs.getString("subject"));
+            row.put("student",
+                    rs.getString("first_name") + " " + rs.getString("last_name"));
+            row.put("amount", rs.getDouble("amount"));
+            row.put("status", rs.getString("status"));
+            row.put("date", rs.getTimestamp("payment_date"));
+
+            list.add(row);
         }
 
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-    // create payment (mark as paid)
-    public boolean pay(long studentId, long courseId, double amount) {
 
-        String sql = "INSERT INTO payments (student_id, course_id, amount, status) VALUES (?, ?, ?, 'PAID')";
+    return list;
+}
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setLong(1, studentId);
-            ps.setLong(2, courseId);
-            ps.setDouble(3, amount);
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
 }
