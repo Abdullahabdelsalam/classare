@@ -8,7 +8,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -63,13 +62,6 @@
             gap: 6px;
         }
 
-        .input-group-text {
-            background: #f8fafc;
-            border-right: none;
-            color: #94a3b8;
-            border-radius: 12px 0 0 12px;
-        }
-
         .form-control, .form-select {
             border-radius: 12px;
             padding: 0.75rem 1rem;
@@ -90,7 +82,6 @@
             border-radius: 14px;
             font-weight: 800;
             padding: 1rem;
-            font-size: 1rem;
             transition: all 0.3s ease;
             box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
         }
@@ -109,6 +100,17 @@
             padding-bottom: 10px;
             margin-bottom: 20px;
             margin-top: 10px;
+        }
+
+        /* Profile Image Styles */
+        .profile-img-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 25px;
+            border: 4px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: #f1f5f9;
         }
     </style>
 </head>
@@ -134,39 +136,48 @@
                         </div>
                     <% } %>
 
-                    <form action="register-instructor" method="POST">
+                    <form action="register-instructor" method="POST" enctype="multipart/form-data">
 
                         <div class="row g-4">
-                        <div class="col-12"><div class="section-title">PERSONAL INFORMATION</div></div>
 
-                        <div class="col-md-6">
-                            <label class="form-label"><i class="fa-solid fa-user small"></i> First Name</label>
-                            <input type="text" name="firstName" class="form-control" placeholder="First Name" required>
-                        </div>
+                            <div class="col-12"><div class="section-title">IDENTITY & BIOGRAPHY</div></div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" name="lastName" class="form-control" placeholder="Last Name" required>
-                        </div>
+                            <div class="col-12 text-center mb-3">
+                                <img id="preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-preview mb-3" alt="Instructor Preview">
+                                <div class="col-md-6 mx-auto">
+                                    <label class="form-label justify-content-center"><i class="fa-solid fa-camera"></i> Profile Picture</label>
+                                    <input type="file" name="profileImage" class="form-control" accept="image/*" required onchange="previewImage(this)">
+                                </div>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label"><i class="fa-solid fa-calendar-days small"></i> Date of Birth</label>
-                            <input type="date" name="birthDate" class="form-control" required>
-                        </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fa-solid fa-user small"></i> First Name</label>
+                                <input type="text" name="firstName" class="form-control" placeholder="First Name" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label"><i class="fa-solid fa-id-card small"></i> National ID</label>
-                            <input type="text" name="nationalId" class="form-control" placeholder="123-456-789" required>
-                        </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="lastName" class="form-control" placeholder="Last Name" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label"><i class="fa-solid fa-venus-mars small"></i> Gender</label>
-                            <select name="gender" class="form-select" required>
-                                <option value="" selected disabled>Choose...</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
-                            </select>
-                        </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fa-solid fa-calendar-days small"></i> Date of Birth</label>
+                                <input type="date" name="birthDate" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fa-solid fa-id-card small"></i> National ID</label>
+                                <input type="text" name="nationalId" class="form-control" placeholder="National ID" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fa-solid fa-venus-mars small"></i> Gender</label>
+                                <select name="gender" class="form-select" required>
+                                    <option value="" selected disabled>Choose...</option>
+                                    <option value="MALE">Male</option>
+                                    <option value="FEMALE">Female</option>
+                                </select>
+                            </div>
 
                             <div class="col-12"><div class="section-title">ACCOUNT SECURITY</div></div>
 
@@ -194,8 +205,13 @@
 
                             <div class="col-12">
                                 <label class="form-label"><i class="fa-solid fa-book-open small"></i> Specialization / Subject</label>
-                                <input type="text" name="specialization" class="form-control"
-                                       placeholder="e.g. Advanced Mathematics, Quantum Physics">
+                                <input type="text" name="specialization" class="form-control" placeholder="e.g. Advanced Mathematics">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label"><i class="fa-solid fa-file-pdf small"></i> Professional Documents (CV, Certificates)</label>
+                                <input type="file" name="documents" class="form-control" multiple required>
+                                <div class="form-text text-muted">You can select multiple files (PDF, Word, or Images).</div>
                             </div>
 
                             <div class="col-12 mt-5">
@@ -219,6 +235,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    // وظيفة معاينة الصورة الشخصية
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 </body>
 </html>

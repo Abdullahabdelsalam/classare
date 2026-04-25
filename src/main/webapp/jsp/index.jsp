@@ -118,6 +118,11 @@
             margin-bottom: 1rem;
             display: block;
         }
+        .social-links a:hover {
+            transform: scale(1.2);
+            color: #6366f1 !important;
+            transition: 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -126,7 +131,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">Classare</a>
             <div class="ms-auto d-flex gap-2">
-                <a href="login.jsp" class="btn btn-custom btn-outline-primary border-2">Login</a>
+                <a href="<%=request.getContextPath()%>/login.jsp" class="btn btn-custom btn-outline-primary border-2">Login</a>
                 <a href="register-choice.jsp" class="btn btn-custom btn-primary-custom d-none d-md-inline-block">Join Now</a>
             </div>
         </div>
@@ -140,7 +145,7 @@
             <h1 class="hero-title">Elevate Education<br>With Classare</h1>
             <p class="hero-subtitle">The smartest platform designed to connect teachers, students, and parents in a seamless, high-tech learning environment.</p>
             <div class="d-flex justify-content-center gap-3">
-                <a href="register-choice.jsp" class="btn btn-custom btn-primary-custom btn-lg px-5">Get Started Free</a>
+                <a href="<%=request.getContextPath()%>/register-choice.jsp" class="btn btn-custom btn-primary-custom btn-lg px-5">Get Started Free</a>
                 <a href="#features" class="btn btn-custom btn-light btn-lg px-5 border">Learn More</a>
             </div>
         </div>
@@ -187,11 +192,23 @@
         <div class="container">
             <span class="footer-logo">Classare</span>
             <p class="mb-4">Building bridges of knowledge with cutting-edge technology.</p>
-            <div class="social-links mb-4 d-flex justify-content-center gap-3">
-                <a href="#" class="text-white fs-5"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-white fs-5"><i class="fab fa-linkedin"></i></a>
-            </div>
+           <div class="social-links mb-4 d-flex justify-content-center gap-3">
+               <a href="https://www.facebook.com/abdo.shams.393" target="_blank" rel="noopener noreferrer" class="text-white fs-5">
+                   <i class="fab fa-facebook"></i>
+               </a>
+               <a href="https://www.instagram.com/abdullah_shams705" target="_blank" rel="noopener noreferrer" class="text-white fs-5">
+                   <i class="fab fa-instagram"></i>
+               </a>
+               <a href="https://www.linkedin.com/in/abdallah-shams-1b27b024a/" target="_blank" rel="noopener noreferrer" class="text-white fs-5">
+                   <i class="fab fa-linkedin"></i>
+               </a>
+               <a href="https://mail.google.com/mail/?view=cm&fs=1&to=abdullahabdalslam705@gmail.com" target="_blank" rel="noopener noreferrer" class="text-white fs-5">
+                  <i class="fa-solid fa-envelope"></i>
+               </a>
+               <a href="https://wa.me/+201060225247" target="_blank" class="text-white fs-5">
+                   <i class="fa-brands fa-whatsapp"></i>
+               </a>
+           </div>
             <hr class="border-secondary opacity-25">
             <p class="small text-muted">© 2026 Classare Project. All rights reserved.</p>
         </div>

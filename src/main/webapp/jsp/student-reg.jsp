@@ -100,6 +100,17 @@
             display: flex;
             gap: 20px;
         }
+
+        /* تنسيق معاينة الصورة */
+        .profile-img-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #10b981;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -115,10 +126,21 @@
                 </div>
 
                 <div class="card-body p-4 p-lg-5">
-                    <form action="register-student" method="POST">
+                    <form action="register-student" method="POST" enctype="multipart/form-data">
 
                         <div class="section-title">
                             <i class="fa-solid fa-circle-user"></i> Personal Information
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <img id="imgPreview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-preview" alt="Preview">
+                            <div class="col-md-8 mx-auto">
+                                <label class="form-label">Profile Image</label>
+                                <div class="input-group has-icon">
+                                    <span class="input-group-text"><i class="fa-solid fa-camera"></i></span>
+                                    <input type="file" name="profileImage" class="form-control" accept="image/*" required onchange="previewFile()">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row g-3 mb-3">
@@ -131,15 +153,15 @@
                                 <input type="text" name="lastName" class="form-control" placeholder="Enter last name" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date of Birth</label>
-                            <div class="input-group has-icon">
-                                <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
-                                <input type="date" name="birthDate" class="form-control" required>
-                            </div>
-                        </div>
 
                         <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <div class="input-group has-icon">
+                                    <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                                    <input type="date" name="birthDate" class="form-control" required>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">National ID</label>
                                 <div class="input-group has-icon">
@@ -147,6 +169,9 @@
                                     <input type="text" name="nationalId" class="form-control" placeholder="14-digit ID" required>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number</label>
                                 <div class="input-group has-icon">
@@ -154,27 +179,25 @@
                                     <input type="tel" name="phone" class="form-control" placeholder="01xxxxxxxxx" required>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label">Gender</label>
-                                <div class="gender-box">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="male" value="MALE" checked>
-                                        <label class="form-check-label" for="male">Male</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="female" value="FEMALE">
-                                        <label class="form-check-label" for="female">Female</label>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Address</label>
                                 <div class="input-group has-icon">
                                     <span class="input-group-text"><i class="fa-solid fa-map-marker-alt"></i></span>
                                     <input type="text" name="address" class="form-control" placeholder="City, Street address">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Gender</label>
+                            <div class="gender-box">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="MALE" checked>
+                                    <label class="form-check-label" for="male">Male</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="FEMALE">
+                                    <label class="form-check-label" for="female">Female</label>
                                 </div>
                             </div>
                         </div>
@@ -256,52 +279,45 @@
 </div>
 
 <script>
-// تحويل كل المستويات من السيرفر إلى مصفوفة JS
-const levelsData = [
-    <c:forEach var="lvl" items="${levels}" varStatus="status">
-    {
-        id: "${lvl.id}",
-        name: "${lvl.name}",
-        // التعديل هنا: نتحقق من وجود الكائن أولاً
-        stageId: "${lvl.stage != null ? lvl.stage.id : (lvl.stageId != null ? lvl.stageId : 0)}"
-    }${!status.last ? ',' : ''}
-    </c:forEach>
-];
+    // وظيفة معاينة الصورة
+    function previewFile() {
+        const preview = document.getElementById('imgPreview');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
 
-    function filterLevels() {
-        const stageId = document.getElementById('stageSelect').value;
-        const levelSelect = document.getElementById('levelSelect');
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
 
-        // مسح الخيارات الحالية وتفعيل القائمة
-        levelSelect.innerHTML = '<option value="" selected disabled>Select Level...</option>';
-        levelSelect.disabled = false;
-
-        // تصفية المستويات بناءً على المرحلة المختارة
-        const filteredLevels = levelsData.filter(lvl => lvl.stageId == stageId);
-
-        filteredLevels.forEach(lvl => {
-            const option = document.createElement('option');
-            option.value = lvl.id;
-            option.textContent = lvl.name;
-            levelSelect.appendChild(option);
-        });
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
-    // تحويل بيانات الكليات من السيرفر لمصفوفة JS
-    const facultiesData = [
-        <c:forEach var="f" items="${faculties}" varStatus="status">
+
+    const levelsData = [
+        <c:forEach var="lvl" items="${levels}" varStatus="status">
         {
-            id: ${f.id},
-            name: "${f.name}",
-            stageId: ${f.stageId}
+            id: "${lvl.id}",
+            name: "${lvl.name}",
+            stageId: "${lvl.stage != null ? lvl.stage.id : (lvl.stageId != null ? lvl.stageId : 0)}"
         }${!status.last ? ',' : ''}
         </c:forEach>
     ];
 
-    // تعديل ميثود الفلترة القديمة
+    const facultiesData = [
+        <c:forEach var="f" items="${faculties}" varStatus="status">
+        {
+            id: "${f.id}",
+            name: "${f.name}",
+            stageId: "${f.stageId}"
+        }${!status.last ? ',' : ''}
+        </c:forEach>
+    ];
+
     function filterLevels() {
         const stageId = document.getElementById('stageSelect').value;
 
-        // 1. فلترة المستويات (كودك اللي فات)
+        // تصفية المستويات
         const levelSelect = document.getElementById('levelSelect');
         levelSelect.innerHTML = '<option value="" selected disabled>Select Level...</option>';
         levelSelect.disabled = false;
@@ -309,7 +325,7 @@ const levelsData = [
             levelSelect.add(new Option(lvl.name, lvl.id));
         });
 
-        // 2. فلترة الكليات (الجديد)
+        // تصفية الكليات
         const facultySelect = document.getElementById('facultySelect');
         const filteredFacs = facultiesData.filter(f => f.stageId == stageId);
 

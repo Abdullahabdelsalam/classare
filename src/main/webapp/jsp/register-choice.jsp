@@ -128,7 +128,7 @@
 
         <div class="row justify-content-center g-4">
           <div class="col-md-5 col-lg-4">
-              <a href="register-instructor" class="selection-card instructor-card text-center text-decoration-none">
+              <a href="<%=request.getContextPath()%>/register-instructor" class="selection-card instructor-card text-center text-decoration-none">
                   <div class="icon-wrapper">
                       <i class="fa-solid fa-chalkboard-user"></i>
                   </div>
@@ -141,7 +141,7 @@
           </div>
 
             <div class="col-md-5 col-lg-4">
-                <a href="register-student" class="selection-card student-card text-center text-decoration-none">
+                <a href="<%=request.getContextPath()%>/register-student" class="selection-card student-card text-center text-decoration-none">
                     <div class="icon-wrapper">
                         <i class="fa-solid fa-user-graduate"></i>
                     </div>
