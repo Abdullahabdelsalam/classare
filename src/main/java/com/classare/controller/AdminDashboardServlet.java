@@ -30,22 +30,17 @@ import java.sql.Statement;
             try (Connection conn = DBConnection.getConnection();
                  Statement stmt = conn.createStatement()) {
 
-                // Centers
                 ResultSet rs = stmt.executeQuery(sqlCenters);
                 if(rs.next()) totalCenters = rs.getInt("cnt");
                 rs.close();
 
-                // Students
                 rs = stmt.executeQuery(sqlStudents);
                 if(rs.next()) totalStudents = rs.getInt("cnt");
                 rs.close();
 
-                // Instructors
                 rs = stmt.executeQuery(sqlInstructors);
                 if(rs.next()) totalInstructors = rs.getInt("cnt");
                 rs.close();
-
-                // Active Courses
                 rs = stmt.executeQuery(sqlCourses);
                 if(rs.next()) activeCourses = rs.getInt("cnt");
                 rs.close();
@@ -54,13 +49,11 @@ import java.sql.Statement;
                 e.printStackTrace();
             }
 
-            // Set attributes for JSP
             request.setAttribute("totalCenters", totalCenters);
             request.setAttribute("totalStudents", totalStudents);
             request.setAttribute("totalInstructors", totalInstructors);
             request.setAttribute("activeCourses", activeCourses);
 
-            // Forward to JSP
             request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
         }
     }

@@ -210,7 +210,7 @@
 
                             <div class="col-12">
                                 <label class="form-label"><i class="fa-solid fa-file-pdf small"></i> Professional Documents (CV, Certificates)</label>
-                                <input type="file" name="documents" class="form-control" multiple required>
+                                <input type="file" name="document" class="form-control" multiple required>
                                 <div class="form-text text-muted">You can select multiple files (PDF, Word, or Images).</div>
                             </div>
 
@@ -237,7 +237,6 @@
 </div>
 
 <script>
-    // وظيفة معاينة الصورة الشخصية
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();

@@ -133,7 +133,7 @@
             </p>
         </div>
 
-        <form action="register-admin" method="post">
+        <form action="${pageContext.request.contextPath}/register-admin" method="post">
             <div class="row g-4">
                 <div class="col-md-6">
                     <label class="form-label">First Name</label>

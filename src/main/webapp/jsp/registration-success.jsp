@@ -121,13 +121,13 @@
             We're excited to have you on board! You can now log in and start your journey.
         </p>
 
-        <a href="login.jsp" class="btn btn-login">
+        <a href="<%=request.getContextPath()%>/login.jsp" class="btn btn-login">
             Continue to Login
             <i class="fa-solid fa-arrow-right"></i>
         </a>
 
         <div class="mt-4">
-            <small class="text-muted">Need help? <a href="#" class="text-decoration-none fw-bold">Contact Support</a></small>
+            <small class="text-muted">Need help? <a href="<%=request.getContextPath()%>/index.jsp" class="text-decoration-none fw-bold">Contact Support</a></small>
         </div>
     </div>
 

@@ -201,40 +201,76 @@ public class UserDAO {
 
         return user;
     }
-    public static boolean createAdmin(User user) {
-        String insertPerson = "INSERT INTO person (first_name, last_name) VALUES (?, ?)";
-        String insertUser = "INSERT INTO users (person_id, email, password_hash, is_active) VALUES (?, ?, ?, ?)";
-        String insertRole = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
+    public static boolean createAdmin(String firstName,
+                                      String lastName,
+                                      String email,
+                                      String password) {
 
-        try (Connection con = DBConnection.getConnection()) {
-            PreparedStatement psPerson = con.prepareStatement(insertPerson, Statement.RETURN_GENERATED_KEYS);
-            psPerson.setString(1, user.getPerson().getFirstName());
-            psPerson.setString(2, user.getPerson().getLastName());
-            psPerson.executeUpdate();
-            ResultSet rsPerson = psPerson.getGeneratedKeys();
-            if (rsPerson.next()) {
-                user.getPerson().setId(rsPerson.getLong(1));
+        Connection conn = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement check = conn.prepareStatement(
+                    "SELECT id FROM users WHERE email = ?"
+            );
+            check.setString(1, email);
+
+            ResultSet cr = check.executeQuery();
+            if (cr.next()) {
+                return false;
             }
 
-            PreparedStatement psUser = con.prepareStatement(insertUser, Statement.RETURN_GENERATED_KEYS);
-            psUser.setLong(1, user.getPerson().getId());
-            psUser.setString(2, user.getEmail());
-            psUser.setString(3, user.getPasswordHash());
-            psUser.setBoolean(4, true);
-            psUser.executeUpdate();
-            ResultSet rsUser = psUser.getGeneratedKeys();
-            if (rsUser.next()) {
-                user.setId(rsUser.getLong(1));
-            }
 
-            PreparedStatement psRole = con.prepareStatement(insertRole);
-            psRole.setLong(1, user.getId());
-            psRole.setInt(2,(int) user.getRoles().get(0).getId());
-            psRole.executeUpdate();
+            PreparedStatement pStmt = conn.prepareStatement(
+                    "INSERT INTO person(first_name, last_name) VALUES (?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
+            pStmt.setString(1, firstName);
+            pStmt.setString(2, lastName);
+            pStmt.executeUpdate();
+
+            ResultSet prs = pStmt.getGeneratedKeys();
+            prs.next();
+            long personId = prs.getLong(1);
+
+            PreparedStatement uStmt = conn.prepareStatement(
+                    "INSERT INTO users(person_id, email, password_hash) VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            uStmt.setLong(1, personId);
+            uStmt.setString(2, email);
+            uStmt.setString(3, BCrypt.hashpw(password, BCrypt.gensalt()));
+            uStmt.executeUpdate();
+
+            ResultSet urs = uStmt.getGeneratedKeys();
+            urs.next();
+            long userId = urs.getLong(1);
+
+            PreparedStatement roleStmt = conn.prepareStatement(
+                    "SELECT id FROM roles WHERE name = 'ADMIN'"
+            );
+
+            ResultSet roleRs = roleStmt.executeQuery();
+            roleRs.next();
+            long roleId = roleRs.getLong(1);
+
+            PreparedStatement urStmt = conn.prepareStatement(
+                    "INSERT INTO user_roles(user_id, role_id) VALUES (?, ?)"
+            );
+
+            urStmt.setLong(1, userId);
+            urStmt.setLong(2, roleId);
+            urStmt.executeUpdate();
+
+            conn.commit();
             return true;
 
         } catch (Exception e) {
+            try { if (conn != null) conn.rollback(); } catch (Exception ignored) {}
             e.printStackTrace();
             return false;
         }

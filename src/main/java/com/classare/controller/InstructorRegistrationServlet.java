@@ -40,10 +40,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
             throws IOException, ServletException {
 
         try {
-
-            // =========================
-            // 1. VALIDATION
-            // =========================
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
@@ -53,17 +49,11 @@ public class InstructorRegistrationServlet extends HttpServlet {
                 return;
             }
 
-            // =========================
-            // 2. UPLOAD BASE PATH (IMPORTANT FIX)
-            // =========================
             String basePath = "C:/classare/uploads/instructors";
 
             File dir = new File(basePath);
             if (!dir.exists()) dir.mkdirs();
 
-            // =========================
-            // 3. PROFILE IMAGE UPLOAD
-            // =========================
             Part profilePart = request.getPart("profileImage");
 
             String profileName = System.currentTimeMillis() + "_"
@@ -74,9 +64,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
 
             String profileUrl = "uploads/instructors/" + profileName;
 
-            // =========================
-            // 4. PERSON OBJECT
-            // =========================
             Person p = new Person();
             p.setFirstName(request.getParameter("firstName"));
             p.setLastName(request.getParameter("lastName"));
@@ -87,16 +74,10 @@ public class InstructorRegistrationServlet extends HttpServlet {
             p.setBirthDate(LocalDate.parse(request.getParameter("birthDate")));
             p.setProfileImageUrl(profileUrl);
 
-            // =========================
-            // 5. INSTRUCTOR OBJECT
-            // =========================
             Instructor ins = new Instructor();
             ins.setPerson(p);
             ins.setSpecialization(request.getParameter("specialization"));
 
-            // =========================
-            // 6. DOCUMENTS (MULTIPLE FIX)
-            // =========================
             List<InstructorDocument> docs = new ArrayList<>();
 
             for (Part part : request.getParts()) {
@@ -118,9 +99,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
                 }
             }
 
-            // =========================
-            // 7. SAVE TO DB
-            // =========================
             boolean success = dao.registerInstructor(
                     ins,
                     email,
@@ -128,9 +106,6 @@ public class InstructorRegistrationServlet extends HttpServlet {
                     docs
             );
 
-            // =========================
-            // 8. RESULT
-            // =========================
             if (!success) {
                 response.sendRedirect("register-instructor?error=db_error");
                 return;

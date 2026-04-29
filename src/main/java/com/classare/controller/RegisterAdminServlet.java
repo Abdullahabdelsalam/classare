@@ -1,47 +1,32 @@
 package com.classare.controller;
 
-
-import com.classare.dao.UserDAO;
-import com.classare.model.Person;
-import com.classare.model.User;
-import com.classare.model.Role;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.io.IOException;
-import java.util.Collections;
+import com.classare.service.AdminService;
+import jakarta.servlet.http.*;
 
 @WebServlet("/register-admin")
 public class RegisterAdminServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+
+    private final AdminService service = new AdminService();
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
+
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String firstName = req.getParameter("first_name");
         String lastName = req.getParameter("last_name");
 
-        Person person = new Person();
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
+        boolean created = service.createAdmin(firstName, lastName, email, password);
 
-        User user = new User();
-        user.setEmail(email);
-        user.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
-        user.setPerson(person);
-
-        Role adminRole = new Role();
-        adminRole.setId(1);
-        adminRole.setName("ADMIN");
-
-        user.setRoles(Collections.singletonList(adminRole));
-
-        boolean created = UserDAO.createAdmin(user);
         if (created) {
-            res.sendRedirect("login.jsp?success=admin_created");
+            res.sendRedirect(req.getContextPath() + "/admin/dashboard?success=admin_created");
         } else {
-            res.sendRedirect("admin-register.jsp?error=failed");
+            res.sendRedirect("admin-register.jsp?error=email_exists_or_failed");
         }
     }
 }
